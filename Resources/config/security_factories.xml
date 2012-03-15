@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="security.authentication.factory.shibboleth"
+            class="KULeuven\ShibbolethBundle\DependencyInjection\Security\ShibbolethFactory" public="false">
+            <tag name="security.listener.factory" />
+        </service>
+    </services>
+    
+</container>

@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="shibboleth.class">KULeuven\ShibbolethBundle\Service\Shibboleth</parameter>
+        <parameter key="shibboleth.handler_path">/Shibboleth.sso</parameter>
+        <parameter key="shibboleth.secured_handler">false</parameter>
+        <parameter key="shibboleth.session_initiator_path">/WAYF/kuleuven</parameter>
+        <parameter key="shibboleth.username_attribute">shib-person-uid</parameter>
+        <parameter key="shibboleth.attribute_definitions" type="collection" />
+    </parameters>
+
+    <services>
+        <service id="shibboleth" class="%shibboleth.class%">
+	        <argument>%shibboleth.handler_path%</argument>
+	        <argument>%shibboleth.session_initiator_path%</argument>
+	        <argument>%shibboleth.secured_handler%</argument>
+            <argument>%shibboleth.username_attribute%</argument>
+	        <argument type="collection">%shibboleth.attribute_definitions%</argument>
+        </service>
+	
+        <service id="security.authentication.provider.shibboleth"
+	        class="KULeuven\ShibbolethBundle\Security\ShibbolethAuthProvider" public="false">
+	       <argument /> <!-- User Provider -->
+	       <argument type="service" id="security.user_checker" />
+        </service>
+
+        <service id="security.authentication.listener.shibboleth"
+            class="KULeuven\ShibbolethBundle\Security\ShibbolethListener" public="false">
+            <tag name="monolog.logger" channel="security" />
+            <argument type="service" id="security.context"/>
+            <argument type="service" id="security.authentication.manager" />
+            <argument type="service" id="shibboleth" />
+            <argument /> <!-- Provider-shared Key -->
+            <argument type="service" id="security.authentication.entry_point" on-invalid="null" />
+            <argument type="service" id="logger" on-invalid="null" />
+        </service>
+
+        <service id="security.authentication.entry_point.shibboleth"
+            class="KULeuven\ShibbolethBundle\Security\ShibbolethAuthenticationEntryPoint" public="false" >
+            <argument type="service" id="shibboleth" />
+        </service>
+
+        <service id="security.logout.handler.shibboleth"
+            class="KULeuven\ShibbolethBundle\Security\ShibbolethLogoutHandler" public="false" >
+            <argument type="service" id="shibboleth" />
+        </service>
+
+    </services>
+</container>
