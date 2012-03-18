@@ -7,7 +7,7 @@
     <parameters>
         <parameter key="shibboleth.class">KULeuven\ShibbolethBundle\Service\Shibboleth</parameter>
         <parameter key="shibboleth.handler_path">/Shibboleth.sso</parameter>
-        <parameter key="shibboleth.secured_handler">false</parameter>
+        <parameter key="shibboleth.secured_handler">true</parameter>
         <parameter key="shibboleth.session_initiator_path">/WAYF/kuleuven</parameter>
         <parameter key="shibboleth.username_attribute">shib-person-uid</parameter>
         <parameter key="shibboleth.attribute_definitions" type="collection" />
@@ -24,8 +24,10 @@
 	
         <service id="security.authentication.provider.shibboleth"
 	        class="KULeuven\ShibbolethBundle\Security\ShibbolethAuthProvider" public="false">
+               <tag name="monolog.logger" channel="security" />
 	       <argument /> <!-- User Provider -->
 	       <argument type="service" id="security.user_checker" />
+               <argument type="service" id="logger" on-invalid="null" />
         </service>
 
         <service id="security.authentication.listener.shibboleth"

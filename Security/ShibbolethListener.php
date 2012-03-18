@@ -10,6 +10,7 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class ShibbolethListener implements ListenerInterface {
 
@@ -48,6 +49,7 @@ class ShibbolethListener implements ListenerInterface {
         }
             
         $user = $this->shibboleth->getUser($request);
+        if (null !== $this->logger) $this->logger->debug(sprintf('Shibboleth service return user: %s', $user));
         if (null !== $token = $this->securityContext->getToken()) {
             if ($token instanceof ShibbolethUserToken && $token->isAuthenticated() && $token->getUsername() === $user) {
                 return;
@@ -55,7 +57,10 @@ class ShibbolethListener implements ListenerInterface {
         }
         try {
             $attributes = $this->shibboleth->getAttributes($request);
+            $this->logger->debug(sprintf('Shibboleth returned attributes from: %s', $attributes['identityProvider'][0]));
             $token = $this->authenticationManager->authenticate(new ShibbolethUserToken($user, $attributes));
+            
+            if (null !== $this->logger) $this->logger->debug(sprintf('ShibbolethListener: received token: %s', $token));
 
             if ($token instanceof TokenInterface) {
                 if (null !== $this->logger) {

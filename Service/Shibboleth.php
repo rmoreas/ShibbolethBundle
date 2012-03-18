@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 class Shibboleth {
     
     private $handlerPath = '/Shibboleth.sso';
-    private $securedHandler = false;
+    private $securedHandler = true;
     private $sessionInitiatorPath = '/WAYF/kuleuven';
     private $usernameAttribute = 'shib-person-uid';
     private $attributeDefinitions = array(
@@ -89,7 +89,12 @@ class Shibboleth {
         }
         return $attributes;
     }
-    
+
+    function getAttributeDefinitions()
+    {
+        return $this->attributeDefinitions;
+    }
+
     /**
      * Returns shibboleth session URL
      */

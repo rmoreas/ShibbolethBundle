@@ -15,6 +15,7 @@ class ShibbolethUserToken extends AbstractToken {
      */
     public function __construct($user = null, $attributes = array() ) {
         if ($user instanceof UserInterface) $roles = $user->getRoles();
+        else $roles = array();
         parent::__construct($roles);
         $this->setUser($user);
         $this->setAttributes($attributes);
