@@ -42,7 +42,8 @@ class ShibbolethFactory implements SecurityFactoryInterface {
         $node
             ->children()
                 ->scalarNode('provider')->end()
-            ->end()
+                ->booleanNode('use_shibboleth_entry_point')->defaultValue(true)->end()
+                ->end()
         ;
     }
     
@@ -51,12 +52,14 @@ class ShibbolethFactory implements SecurityFactoryInterface {
         if (null !== $defaultEntryPoint) {
             return $defaultEntryPoint;
         }
-
-        $entryPointId = 'security.authentication.entry_point.shibboleth.'.$id;
-        $container
-            ->setDefinition($entryPointId, new DefinitionDecorator('security.authentication.entry_point.shibboleth'))
-        ;
-
+        if ($config['use_shibboleth_entry_point']) {
+            $entryPointId = 'security.authentication.entry_point.shibboleth.'.$id;
+            $container
+                ->setDefinition($entryPointId, new DefinitionDecorator('security.authentication.entry_point.shibboleth'))
+            ;
+        } else {
+            $entryPointId = null;
+        }
         return $entryPointId;
     }
     
@@ -75,10 +78,9 @@ class ShibbolethFactory implements SecurityFactoryInterface {
     {    
         $listenerId = 'security.authentication.listener.shibboleth';
         $listener = new DefinitionDecorator($listenerId);
-        $listener
-            ->replaceArgument(3, $id)
-            ->replaceArgument(4, new Reference($entryPoint))
-        ;       
+        $listener->replaceArgument(3, $id);
+        if ($entryPoint) $listener->replaceArgument(4, new Reference($entryPoint));
+
         $listenerId .= '.'.$id;
         $container->setDefinition($listenerId, $listener);
         

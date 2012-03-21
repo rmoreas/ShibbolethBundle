@@ -67,7 +67,7 @@ class Shibboleth {
     }
 
     public function getUser(Request $request) {
-        return  $request->headers->get($this->usernameAttribute, false);
+        return  $request->headers->get($this->usernameAttribute, null);
     }
     
     /**
@@ -83,7 +83,7 @@ class Shibboleth {
                     //$this->attributes[$name] = array();
                 } else {
                     if(@$def['charset'] == 'UTF-8') $value = utf8_decode($value);
-                    $attributes[$name] = (@$def['multivalue'])? explode(';',$value) : (array)$value;
+                    $attributes[$name] = (@$def['multivalue'])? explode(';',$value) : $value;
                 }
             }
         }

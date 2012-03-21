@@ -58,14 +58,16 @@ class ShibbolethAuthProvider implements AuthenticationProviderInterface {
     public function retrieveUser($token) {
         try {
             $user = $this->userProvider->loadUserByUsername($token->getUsername());
-	    if (null !== $this->logger) $this->logger->debug(sprintf('ShibbolethAuthProvider: userProvider returned: %s',$user->getUsername()));
+	        if (null !== $this->logger) $this->logger->debug(sprintf('ShibbolethAuthProvider: userProvider returned: %s',$user->getUsername()));
+
+	        if (!$user instanceof UserInterface) {
+	            throw new AuthenticationServiceException('The user provider must return a UserInterface object.');
+	        }
+	         
         } catch (UsernameNotFoundException $e) {
-            $user = new ShibbolethUser($token->getUsername(),$token->getAttributes(),$this->defaultRoles);
+            $user = $token->getUser();
         }
 
-        if (!$user instanceof UserInterface) {
-            throw new AuthenticationServiceException('The user provider must return a UserInterface object.');
-        }
         return $user;        
     }
     
