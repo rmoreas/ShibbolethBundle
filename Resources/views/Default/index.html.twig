@@ -4,5 +4,8 @@
 </head>
 <body>
 <h1>Hello {{ app.user|default(app.security.token.displayName) }}!</h1>
+<pre>
+{{ dump(app.security.token) }}
+</pre>
 </body>
 </html>
