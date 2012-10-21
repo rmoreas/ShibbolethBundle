@@ -1,1 +1,8 @@
-Hello {{ app.user|default(app.security.token.displayName) }}!
+<html>
+<head>
+<title>Hello</title>
+</head>
+<body>
+<h1>Hello {{ app.user|default(app.security.token.displayName) }}!</h1>
+</body>
+</html>
