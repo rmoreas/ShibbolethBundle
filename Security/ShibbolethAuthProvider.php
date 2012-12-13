@@ -65,7 +65,11 @@ class ShibbolethAuthProvider implements AuthenticationProviderInterface {
 	        }
 	         
         } catch (UsernameNotFoundException $e) {
-            $user = $token->getUser();
+        	if ($this->userProvider instanceof ShibbolethUserProviderInterface) {
+    			$user = $this->userProvider->createUser($token);
+    		} else {
+    			throw $e;
+    		}
         }
 
         return $user;        
