@@ -7,7 +7,7 @@ class Shibboleth {
     
     private $handlerPath = '/Shibboleth.sso';
     private $securedHandler = true;
-    private $sessionInitiatorPath = '/WAYF/kuleuven';
+    private $sessionInitiatorPath = '/Login';
     private $usernameAttribute = 'shib-person-uid';
     private $attributeDefinitions = array(
         'uid'           => array('header'=> 'shib-person-uid', 'multivalue'=> false),
