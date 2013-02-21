@@ -1,0 +1,22 @@
+{
+    "name": "kuleuven/shibboleth-bundle",
+    "description": "Symfony2 authentication provider for Shibboleth",
+    "keywords": ["authentication","security","shibboleth"],
+    "homepage": "http://projects.mech.kuleuven.be/projects/shibboleth-bundle",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ronny Moreas",
+            "email": "ronny.moreas@kuleuven.be"
+        },
+        {
+            "name": "Bert Van Gelder",
+            "email": "bert_vangelder@hotmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "KULeuven\\ShibbolethBundle": "" }
+    },
+    "target-dir": "KULeuven/ShibbolethBundle"
+}	
