@@ -77,6 +77,10 @@ Add following lines to the .htaccess file in your projects web folder
 			secured_area:
 				pattern:    ^/secured
 				shibboleth: ~
+                logout:
+                    path: /secured/logout
+                    target: /
+                    success_handler: security.logout.handler.shibboleth
 ```
 
 ### 3. Shibboleth configuration
