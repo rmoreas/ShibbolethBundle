@@ -144,8 +144,13 @@ class Shibboleth {
      * Returns URL to invalidate the shibboleth session.
      */
     function getLogoutUrl(Request $request, $return = null) {
-        return $this->getHandlerUrl($request) . '/Logout?return='. urlencode($request->headers->get('shib-logouturl')
-                . (empty($return)? '' : '?return='.$return) );
+        $logout_redirect = $request->headers->get('shib-logouturl');
+        if (!empty($logout_redirect)) {
+            return $this->getHandlerUrl($request) . '/Logout?return='. urlencode($logout_redirect
+                    . (empty($return)? '' : '?return='.$return) );
+        } else {
+            return $this->getHandlerUrl($request) . '/Logout';
+        }
     }
 
     function addAttributeDefinition($def) {
