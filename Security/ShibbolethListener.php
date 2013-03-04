@@ -29,7 +29,7 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
@@ -77,6 +77,10 @@ class ShibbolethListener implements ListenerInterface {
         }
             
         $username = $this->shibboleth->getUser($request);
+        
+        if ('' == $username) {
+            return;
+        }
         
         if (null !== $this->logger) $this->logger->debug(sprintf('Shibboleth service returned user: %s', $username));
         if (null !== $token = $this->securityContext->getToken()) {
