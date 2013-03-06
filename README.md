@@ -24,7 +24,7 @@ ShibbolethBundle is composer-friendly.
    "repositories": [
         {
             "type": "vcs",
-            "url": "git@git.mech.kuleuven.be:/symfony/ShibbolethBundle.git"
+            "url": "git@github.com:rmoreas/ShibbolethBundle.git"
         }
     ],	
 ```
