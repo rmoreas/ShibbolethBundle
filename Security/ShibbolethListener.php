@@ -68,19 +68,13 @@ class ShibbolethListener implements ListenerInterface {
 
         $request = $event->getRequest();
 
-        /*        
         if (!$this->shibboleth->isAuthenticated($request)) { return; }
-        */
         
         if (null !== $this->logger) {
             $this->logger->debug(sprintf('Checking security context token: %s', $this->securityContext->getToken()));
         }
             
         $username = $this->shibboleth->getUser($request);
-        
-        if ('' == $username) {
-            return;
-        }
         
         if (null !== $this->logger) $this->logger->debug(sprintf('Shibboleth service returned user: %s', $username));
         if (null !== $token = $this->securityContext->getToken()) {

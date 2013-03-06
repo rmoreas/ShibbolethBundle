@@ -148,6 +148,8 @@ class Shibboleth {
         if (!empty($logout_redirect)) {
             return $this->getHandlerUrl($request) . '/Logout?return='. urlencode($logout_redirect
                     . (empty($return)? '' : '?return='.$return) );
+        } elseif (!empty($return)) {
+            return $this->getHandlerUrl($request) . '/Logout?return='.urlencode($return);
         } else {
             return $this->getHandlerUrl($request) . '/Logout';
         }
