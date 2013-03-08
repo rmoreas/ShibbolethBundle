@@ -86,7 +86,7 @@ class Shibboleth {
     }
 
     public function isAuthenticated(Request $request) {
-        return $request->headers->has('shib-identity-provider');
+        return (bool)$request->headers->get('shib-identity-provider');
     }
 
     public function getUser(Request $request) {
