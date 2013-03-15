@@ -24,11 +24,12 @@
  */
  namespace KULeuven\ShibbolethBundle\Security;
 
-use Symfony\Component\Security\Core\User\UserProviderInterface;
+/**
+ * @author Radoslaw Kamil Ejsmont <radoslaw.ejsmont@kuleuven.be>
+ */
+abstract class AbstractShibbolethUserProvider implements ShibbolethUserProviderInterface {
 
-interface ShibbolethUserProviderInterface extends UserProviderInterface{
-
-	function createUser(ShibbolethUserToken $token);
-        function loadUser(ShibbolethUserToken $token);
-        
+        function loadUser(ShibbolethUserToken $token) {
+            return $this->loadUserByUsername($token->getUsername());
+        }
 }

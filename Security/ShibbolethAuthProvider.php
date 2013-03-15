@@ -90,8 +90,14 @@ class ShibbolethAuthProvider implements AuthenticationProviderInterface {
 
 	public function retrieveUser($token) {
 		try {
-			$user = $this->userProvider
-					->loadUserByUsername($token->getUsername());
+                        if ($this->userProvider instanceof ShibbolethUserProviderInterface) {
+                            $user = $this->userProvider
+                                            ->loadUser($token);
+                        } else {
+                            $user = $this->userProvider
+                                            ->loadUserByUsername($token->getUsername());
+                        }
+                        
 			if (null !== $this->logger)
 				$this->logger
 						->debug(

@@ -120,7 +120,7 @@ This example uses Propel ORM to store users.
 	use YourProjectNamespace\Model\User;
 	use YourProjectNamespace\Model\UserQuery;
 
-	use KULeuven\ShibbolethBundle\Security\ShibbolethUserProviderInterface;
+	use KULeuven\ShibbolethBundle\Security\AbstractShibbolethUserProvider;
 	use KULeuven\ShibbolethBundle\Security\ShibbolethUserToken;
 
 	use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -129,7 +129,7 @@ This example uses Propel ORM to store users.
 	use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 	use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 
-	class UserProvider implements ShibbolethUserProviderInterface
+	class UserProvider extends AbstractShibbolethUserProvider
 	{
 		public function loadUserByUsername($username)
 		{
