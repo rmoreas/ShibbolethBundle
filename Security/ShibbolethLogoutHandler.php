@@ -26,6 +26,7 @@
 
 use Symfony\Component\Security\Http\Logout\LogoutSuccessHandlerInterface;
 use Symfony\Component\Security\Http\Logout\LogoutHandlerInterface;
+use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -35,24 +36,27 @@ use KULeuven\ShibbolethBundle\Service\Shibboleth;
 class ShibbolethLogoutHandler implements LogoutHandlerInterface, LogoutSuccessHandlerInterface
 {
     private $shibboleth;
-    
-    public function __construct(Shibboleth $shibboleth)
+    private $httpUtils;
+    private $target;
+
+    public function __construct(Shibboleth $shibboleth, HttpUtils $httpUtils, $targetUrl = '/')
     {
         $this->shibboleth = $shibboleth;
+        $this->httpUtils = $httpUtils;
+        $this->target = $targetUrl;
     }
-    
+
     public function logout(Request $request, Response $response, TokenInterface $token)
     {
         if ($token instanceof ShibbolethUserToken) {
             $request->getSession()->invalidate();
-        }        
+        }
     }
-    
+
     public function onLogoutSuccess(Request $request)
     {
-        // redirect the user to where they were before the login process begun.
-        $referer_url = $request->headers->get('referer');    
-        $response = new RedirectResponse($this->shibboleth->getLogoutUrl($request,$referer_url));
+        $returnUri = $this->httpUtils->generateUri($request, $this->target);
+        $response = new RedirectResponse($this->shibboleth->getLogoutUrl($request, $returnUri));
         return $response;
-    }    
+    }
 }
