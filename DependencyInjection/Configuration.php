@@ -50,6 +50,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('handler_path')->end()
                 ->booleanNode('secured_handler')->end()
                 ->scalarNode('session_initiator_path')->end()
+                ->scalarNode('username_attribute')->end()
             ->end()
             ->fixXmlConfig('attribute_definition')
             ->children()
