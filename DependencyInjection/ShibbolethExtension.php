@@ -56,6 +56,9 @@ class ShibbolethExtension extends Extension
         if (isset($config['session_initiator_path'])) {
             $container->setParameter('shibboleth.session_initiator_path',$config['session_initiator_path']);
         }
+        if (isset($config['username_attribute'])) {
+            $container->setParameter('shibboleth.username_attribute',$config['username_attribute']);
+        }
         if (isset($config['attribute_definitions'])) {
             $container->setParameter('shibboleth.attribute_definitions',$config['attribute_definitions']);
         } else {
