@@ -103,6 +103,60 @@ The above listed configuration values are the default values. To use the default
 	shibboleth: ~
 ```
 
+Available Shibboleth attributes
+-------------------------------
+By default, the bundle exposes several Shibboleth attributes through the user token, [ShibbolethUserToken](Security/ShibbolethUserToken.php). The token provides specific accessors for most of the attributes, as well as the generic accessors `getAttribute`, `getArrayAttribute` and `hasAttributeValue`. Each attribute is internally identified by an alias, which serves as argument to the aforementioned methods. The following table lists the Shibboleth attributes available (when provided) through the user token:
+
+| Attribute                            | Alias                    |
+| ------------------------------------ | ------------------------ |
+| shib-person-uid                      | uid                      |
+| shib-person-commonname               | cn                       |
+| shib-person-surname                  | sn                       |
+| shib-person-givenname                | givenName                |
+| shib-person-mail                     | mail                     |
+| shib-person-ou                       | ou                       |
+| shib-person-telephonenumber          | telephoneNumber          |
+| shib-person-facsimiletelephonenumber | facsimileTelephoneNumber |
+| shib-person-mobile                   | mobile                   |
+| shib-person-postaladdress            | postalAddress            |
+| shib-ep-unscopedaffiliation          | affiliation              |
+| shib-ep-scopedaffiliation            | scopedAffiliation        |
+| shib-ep-orgunitdn                    | orgUnitDN                |
+| shib-ep-orgdn                        | orgDN                    |
+| shib-logouturl                       | logoutURL                |
+| shib-identity-provider               | identityProvider         |
+| shib-origon-site                     | originSite               |
+| shib-authentication-instant          | authenticationInstant    |
+| shib-kul-employeetype                | employeeType             |
+| shib-kul-studenttype                 | studentType              |
+| shib-kul-primounumber                | primouNumber             |
+| shib-kul-ounumber                    | ouNumber                 |
+| shib-kul-dipl                        | dipl                     |
+| shib-kul-opl                         | opl                      |
+| shib-kul-campus                      | campus                   |
+
+If for some reason you want to pass additional attributes (for example custom attributes), you can configure them this way:
+
+```yml
+# app/config/config.yml
+shibboleth:
+	# ...
+	attribute_definitions:
+		foo:  # the attribute alias
+			header: shib-acme-foo  # the attribute name
+		bar:
+			header: shib-acme-bar
+			multivalue: true  # attribute contains multiple values (default is false, i.e. attribute is scalar)
+			charset: UTF-8    # attribute is encoded with UTF-8 (default is ISO-8859-1)
+```
+
+The key containing the configuration of each attribute will be its alias. That means the value(s) of the `shib-acme-foo` and `shib-acme-bar` attributes can be retrieved with:
+
+```php
+$foo = $token->getAttribute('foo');
+$bars = $token->getArrayAttribute('bar'); // returns an array containing the multiple values
+```
+
 User Provider
 -------------
 

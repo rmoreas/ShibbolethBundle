@@ -19,9 +19,9 @@
 	        <argument>%shibboleth.session_initiator_path%</argument>
 	        <argument>%shibboleth.secured_handler%</argument>
             <argument>%shibboleth.username_attribute%</argument>
-	        <argument type="collection">%shibboleth.attribute_definitions%</argument>
+	        <argument>%shibboleth.attribute_definitions%</argument>
         </service>
-	
+
         <service id="security.authentication.provider.shibboleth"
 	        class="KULeuven\ShibbolethBundle\Security\ShibbolethAuthProvider" public="false">
                <tag name="monolog.logger" channel="security" />
