@@ -59,8 +59,9 @@ class Shibboleth {
         'opl' => array('header'=> 'shib-kul-opl', 'multivalue'=> true),
         'campus' => array('header'=> 'shib-kul-campus', 'multivalue'=> false)
     );
+    private $useEnvironment = false;
     
-    public function __construct($handlerPath,$sessionInitiatorPath, $securedHandler, $usernameAttribute, $attributeDefinitions = null) {
+    public function __construct($handlerPath,$sessionInitiatorPath, $securedHandler, $usernameAttribute, $attributeDefinitions = null, $useEnvironment = false) {
         $this->handlerPath = $handlerPath;
         $this->sessionInitiatorPath = $sessionInitiatorPath;
         $this->securedHandler = $securedHandler;
@@ -71,6 +72,7 @@ class Shibboleth {
                 $this->addAttributeDefinition($def);
             }
         }
+        $this->useEnvironment = $useEnvironment;
     }
 
     public function getHandlerPath() {
@@ -85,12 +87,24 @@ class Shibboleth {
         return $this->sessionInitiatorPath;
     }
 
+    private function getAttribute($request, $attribute) {
+        if ($this->useEnvironment) {
+            return $request->server->get($attribute, null);
+        } else {
+            return $request->headers->get($attribute, null);
+        }
+    }
+
     public function isAuthenticated(Request $request) {
-        return (bool)$request->headers->get('shib-identity-provider');
+        if ($this->useEnvironment) {
+            return (bool)$this->getAttribute($request, 'Shib-Identity-Provider');
+        } else {
+            return (bool)$this->getAttribute($request, 'shib-identity-provider');
+        }
     }
 
     public function getUser(Request $request) {
-        return  $request->headers->get($this->usernameAttribute, null);
+        return  $this->getAttribute($request, $this->usernameAttribute);
     }
     
     /**
@@ -101,7 +115,7 @@ class Shibboleth {
         $attributes = array();
         if ($this->isAuthenticated($request)) {
             foreach ($this->getAttributeDefinitions() as $name => $def) {
-                $value = $request->headers->get($def['header'],null);
+                $value = $this->getAttribute($request, $def['header']);
                 if (null === $value) {
                     //$this->attributes[$name] = array();
                 } else {
@@ -144,7 +158,11 @@ class Shibboleth {
      * Returns URL to invalidate the shibboleth session.
      */
     function getLogoutUrl(Request $request, $return = null) {
-        $logout_redirect = $request->headers->get('shib-logouturl');
+        if ($this->useEnvironment) {
+            $logout_redirect = $this->getAttribute($request, 'Shib-Logouturl');
+        } else {
+            $logout_redirect = $this->getAttribute($request, 'shib-logouturl');
+        }
         if (!empty($logout_redirect)) {
             return $this->getHandlerUrl($request) . '/Logout?return='. urlencode($logout_redirect
                     . (empty($return)? '' : '?return='.$return) );
