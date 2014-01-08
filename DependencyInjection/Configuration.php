@@ -61,7 +61,7 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('header')->isRequired()->end()
                             ->booleanNode('multivalue')->defaultValue(false)->end()
-                            ->scalarNode('charset')->defaultValue('ISO-8859-1')->end()
+                            ->scalarNode('charset')->defaultValue('UTF-8')->end()
                         ->end()
                 ->end()
              ->end()

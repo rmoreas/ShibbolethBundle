@@ -93,7 +93,8 @@ Possible configuration parameters are:
 		handler_path: /Shibboleth.sso
 		secured_handler: true
 		session_initiator_path: /Login
-		username_attribute: shib-person-uid
+		username_attribute: Shib-Person-uid
+		use_headers: true
 ```
 
 The above listed configuration values are the default values. To use the defaults, simply use the following line in your config:
@@ -109,31 +110,31 @@ By default, the bundle exposes several Shibboleth attributes through the user to
 
 | Attribute                            | Alias                    |
 | ------------------------------------ | ------------------------ |
-| shib-person-uid                      | uid                      |
-| shib-person-commonname               | cn                       |
-| shib-person-surname                  | sn                       |
-| shib-person-givenname                | givenName                |
-| shib-person-mail                     | mail                     |
-| shib-person-ou                       | ou                       |
-| shib-person-telephonenumber          | telephoneNumber          |
-| shib-person-facsimiletelephonenumber | facsimileTelephoneNumber |
-| shib-person-mobile                   | mobile                   |
-| shib-person-postaladdress            | postalAddress            |
-| shib-ep-unscopedaffiliation          | affiliation              |
-| shib-ep-scopedaffiliation            | scopedAffiliation        |
-| shib-ep-orgunitdn                    | orgUnitDN                |
-| shib-ep-orgdn                        | orgDN                    |
-| shib-logouturl                       | logoutURL                |
-| shib-identity-provider               | identityProvider         |
-| shib-origon-site                     | originSite               |
-| shib-authentication-instant          | authenticationInstant    |
-| shib-kul-employeetype                | employeeType             |
-| shib-kul-studenttype                 | studentType              |
-| shib-kul-primounumber                | primouNumber             |
-| shib-kul-ounumber                    | ouNumber                 |
-| shib-kul-dipl                        | dipl                     |
-| shib-kul-opl                         | opl                      |
-| shib-kul-campus                      | campus                   |
+| Shib-Person-uid                      | uid                      |
+| Shib-Person-commonName               | cn                       |
+| Shib-Person-surname                  | sn                       |
+| Shib-Person-givenName                | givenName                |
+| Shib-Person-mail                     | mail                     |
+| Shib-Person-ou                       | ou                       |
+| Shib-Person-telephoneNumber          | telephoneNumber          |
+| Shib-Person-facsimileTelephoneNumber | facsimileTelephoneNumber |
+| Shib-Person-mobile                   | mobile                   |
+| Shib-Person-postalAddress            | postalAddress            |
+| Shib-EP-UnscopedAffiliation          | affiliation              |
+| Shib-EP-Scopedaffiliation            | scopedAffiliation        |
+| Shib-EP-OrgunitDN                    | orgUnitDN                |
+| Shib-EP-OrgDN                        | orgDN                    |
+| Shib-logoutURL                       | logoutURL                |
+| Shib-Identity-Provider               | identityProvider         |
+| Shib-Origin-Site                     | originSite               |
+| Shib-Authentication-Instant          | authenticationInstant    |
+| Shib-KUL-employeeType                | employeeType             |
+| Shib-KUL-studentType                 | studentType              |
+| Shib-KUL-primouNumber                | primouNumber             |
+| Shib-KUL-ouNumber                    | ouNumber                 |
+| Shib-KUL-dipl                        | dipl                     |
+| Shib-KUL-opl                         | opl                      |
+| Shib-KUL-campus                      | campus                   |
 
 If for some reason you want to pass additional attributes (for example custom attributes), you can configure them this way:
 
@@ -147,7 +148,6 @@ shibboleth:
 		bar:
 			header: shib-acme-bar
 			multivalue: true  # attribute contains multiple values (default is false, i.e. attribute is scalar)
-			charset: UTF-8    # attribute is encoded with UTF-8 (default is ISO-8859-1)
 ```
 
 The key containing the configuration of each attribute will be its alias. That means the value(s) of the `shib-acme-foo` and `shib-acme-bar` attributes can be retrieved with:
