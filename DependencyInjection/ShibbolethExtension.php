@@ -64,5 +64,10 @@ class ShibbolethExtension extends Extension
         } else {
             $container->setParameter('shibboleth.attribute_definitions',array());            
         }
+        if (isset($config['use_headers'])) {
+            $container->setParameter('shibboleth.use_headers',$config['use_headers']);
+        } else {
+            $container->setParameter('shibboleth.use_headers',true);
+        }
     }
 }
