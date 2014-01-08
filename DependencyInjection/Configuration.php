@@ -51,7 +51,7 @@ class Configuration implements ConfigurationInterface
                 ->booleanNode('secured_handler')->end()
                 ->scalarNode('session_initiator_path')->end()
                 ->scalarNode('username_attribute')->end()
-                ->scalarNode('use_environment')->end()
+                ->scalarNode('use_headers')->end()
             ->end()
             ->fixXmlConfig('attribute_definition')
             ->children()

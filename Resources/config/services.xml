@@ -11,7 +11,7 @@
         <parameter key="shibboleth.session_initiator_path">/Login</parameter>
         <parameter key="shibboleth.username_attribute">shib-person-uid</parameter>
         <parameter key="shibboleth.attribute_definitions" type="collection" />
-        <parameter key="shibboleth.use_environment" />
+        <parameter key="shibboleth.use_headers" />
     </parameters>
 
     <services>
@@ -21,7 +21,7 @@
 	        <argument>%shibboleth.secured_handler%</argument>
             <argument>%shibboleth.username_attribute%</argument>
 	        <argument>%shibboleth.attribute_definitions%</argument>
- 	        <argument>%shibboleth.use_environment%</argument>
+ 	        <argument>%shibboleth.use_headers%</argument>
         </service>
 
         <service id="security.authentication.provider.shibboleth"
