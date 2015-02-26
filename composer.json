@@ -1,5 +1,5 @@
 {
-    "name": "kuleuven/shibboleth-bundle",
+    "name": "jonathonwalz/shibboleth-bundle",
     "description": "Symfony2 authentication provider for Shibboleth",
     "keywords": ["authentication","security","shibboleth"],
     "type": "symfony-bundle",
@@ -12,6 +12,9 @@
             "name": "Bert Van Gelder"
         }
     ],
+    "conflict": {
+        "kuleuven/shibboleth-bundle": "*"
+    },
     "autoload": {
         "psr-0": { "KULeuven\\ShibbolethBundle": "" }
     },
