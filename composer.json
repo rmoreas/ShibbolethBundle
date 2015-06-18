@@ -16,6 +16,6 @@
         "kuleuven/shibboleth-bundle": "*"
     },
     "autoload": {
-        "psr-4": { "KULeuven\\ShibbolethBundle": "" }
+        "psr-4": { "KULeuven\\ShibbolethBundle\\": "" }
     }
 }	
