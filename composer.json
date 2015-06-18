@@ -16,7 +16,6 @@
         "kuleuven/shibboleth-bundle": "*"
     },
     "autoload": {
-        "psr-0": { "KULeuven\\ShibbolethBundle": "" }
-    },
-    "target-dir": "KULeuven/ShibbolethBundle"
+        "psr-4": { "KULeuven\\ShibbolethBundle": "" }
+    }
 }	
