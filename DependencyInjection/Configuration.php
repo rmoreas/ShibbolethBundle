@@ -52,6 +52,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('session_initiator_path')->end()
                 ->scalarNode('username_attribute')->end()
                 ->scalarNode('use_headers')->end()
+                ->scalarNode('logout_target')->end()
             ->end()
             ->fixXmlConfig('attribute_definition')
             ->children()

@@ -12,6 +12,7 @@
         <parameter key="shibboleth.username_attribute">shib-person-uid</parameter>
         <parameter key="shibboleth.attribute_definitions" type="collection" />
         <parameter key="shibboleth.use_headers" />
+        <parameter key="shibboleth.logout_target"/>
     </parameters>
 
     <services>
@@ -52,6 +53,7 @@
         <service id="security.logout.handler.shibboleth"
             class="KULeuven\ShibbolethBundle\Security\ShibbolethLogoutHandler" public="false" >
             <argument type="service" id="shibboleth" />
+            <argument>%shibboleth.logout_target%</argument>
         </service>
 
     </services>
