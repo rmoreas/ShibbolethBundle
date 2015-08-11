@@ -115,7 +115,12 @@ class Shibboleth {
         $attributes = array();
         if ($this->isAuthenticated($request)) {
             foreach ($this->getAttributeDefinitions() as $name => $def) {
-                $value = $this->getAttribute($request, $def['header']);
+                if ($this->useHeaders) {
+                    $value = $this->getAttribute($request, $def['header']);
+                } else {
+                    $value = $this->getAttribute($request, $name);
+                }
+
                 if (null === $value) {
                     //$this->attributes[$name] = array();
                 } else {
