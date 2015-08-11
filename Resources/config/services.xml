@@ -52,6 +52,8 @@
         <service id="security.logout.handler.shibboleth"
             class="KULeuven\ShibbolethBundle\Security\ShibbolethLogoutHandler" public="false" >
             <argument type="service" id="shibboleth" />
+            <argument type="service" id="security.http_utils" />
+            <argument>/</argument>
         </service>
 
     </services>
