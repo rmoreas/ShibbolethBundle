@@ -69,5 +69,8 @@ class ShibbolethExtension extends Extension
         } else {
             $container->setParameter('shibboleth.use_headers',true);
         }
+        if (isset($config['logout_target'])) {
+            $container->setParameter('shibboleth.logout_target',$config['logout_target']);
+        }
     }
 }

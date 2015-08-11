@@ -56,7 +56,16 @@ class ShibbolethLogoutHandler implements LogoutHandlerInterface, LogoutSuccessHa
     public function onLogoutSuccess(Request $request)
     {
         $returnUri = $this->httpUtils->generateUri($request, $this->target);
-        $response = new RedirectResponse($this->shibboleth->getLogoutUrl($request, $returnUri));
+
+        if (!($this->target)) {
+            // redirect the user to where they were before the login process begun.
+            $target = $request->headers->get('referer');
+        } else {
+            $target = $this->target;
+        }
+
+        $response = new RedirectResponse($this->shibboleth->getLogoutUrl($request, $target));
+
         return $response;
     }
 }
