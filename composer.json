@@ -1,5 +1,5 @@
 {
-    "name": "jonathonwalz/shibboleth-bundle",
+    "name": "kuleuven/shibboleth-bundle",
     "description": "Symfony2 authentication provider for Shibboleth",
     "keywords": ["authentication","security","shibboleth"],
     "type": "symfony-bundle",
