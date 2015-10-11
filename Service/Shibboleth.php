@@ -163,7 +163,7 @@ class Shibboleth {
      * Returns URL to invalidate the shibboleth session.
      */
     function getLogoutUrl(Request $request, $return = null) {
-        $logout_redirect = $this->getAttribute($request, 'Shib-Logouturl');
+        $logout_redirect = $this->getAttribute($request, 'Shib-logoutURL');
         if (!empty($logout_redirect)) {
             return $this->getHandlerUrl($request) . '/Logout?return='. urlencode($logout_redirect
                     . (empty($return)? '' : '?return='.$return) );
