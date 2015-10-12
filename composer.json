@@ -12,9 +12,6 @@
             "name": "Bert Van Gelder"
         }
     ],
-    "conflict": {
-        "kuleuven/shibboleth-bundle": "*"
-    },
     "autoload": {
         "psr-4": { "KULeuven\\ShibbolethBundle\\": "" }
     }
