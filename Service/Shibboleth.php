@@ -22,12 +22,13 @@
  * @copyright   (C) 2013 Ronny Moreas, KU Leuven
  * @license     http://www.gnu.org/licenses/lgpl-3.0-standalone.html LGPL-3
  */
- namespace KULeuven\ShibbolethBundle\Service;
+namespace KULeuven\ShibbolethBundle\Service;
 
 use Symfony\Component\HttpFoundation\Request;
 
-class Shibboleth {
-    
+class Shibboleth
+{
+
     private $handlerPath = '/Shibboleth.sso';
     private $securedHandler = true;
     private $sessionInitiatorPath = '/Login';
@@ -41,7 +42,7 @@ class Shibboleth {
         'ou'            => array('header'=> 'Shib-Person-ou', 'multivalue'=> true),
         'telephoneNumber' => array('header'=> 'Shib-Person-telephoneNumber', 'multivalue'=> true),
         'facsimileTelephoneNumber' => array('header'=> 'Shib-Person-facsimileTelephoneNumber', 'multivalue'=> true),
-        'mobile' 		=> array('header'=> 'Shib-Person-mobile', 'multivalue'=> true),
+        'mobile'        => array('header'=> 'Shib-Person-mobile', 'multivalue'=> true),
         'postalAddress' => array('header'=> 'Shib-Person-postalAddress', 'multivalue'=> true),
         'affiliation'   => array('header'=> 'Shib-EP-UnscopedAffiliation', 'multivalue'=> true),
         'scopedAffiliation' => array('header'=> 'Shib-EP-ScopedAffiliation', 'multivalue'=> true),
@@ -60,14 +61,15 @@ class Shibboleth {
         'campus' => array('header'=> 'Shib-KUL-campus', 'multivalue'=> false)
     );
     private $useHeaders = true;
-    
-    public function __construct($handlerPath,$sessionInitiatorPath, $securedHandler, $usernameAttribute, $attributeDefinitions = null, $useHeaders = true) {
+
+    public function __construct($handlerPath, $sessionInitiatorPath, $securedHandler, $usernameAttribute, $attributeDefinitions = null, $useHeaders = true)
+    {
         $this->handlerPath = $handlerPath;
         $this->sessionInitiatorPath = $sessionInitiatorPath;
         $this->securedHandler = $securedHandler;
         $this->usernameAttribute = $usernameAttribute;
         if (is_array($attributeDefinitions)) {
-            foreach($attributeDefinitions as $name => $def) {
+            foreach ($attributeDefinitions as $name => $def) {
                 $def['alias'] = $name;
                 $this->addAttributeDefinition($def);
             }
@@ -75,19 +77,23 @@ class Shibboleth {
         $this->useHeaders = $useHeaders;
     }
 
-    public function getHandlerPath() {
+    public function getHandlerPath()
+    {
         return $this->handlerPath;
     }
-    
-    public function isSecuredHandler() {
+
+    public function isSecuredHandler()
+    {
         return $this->securedHandler;
     }
-    
-    public function getSessionInitiatorPath() {
+
+    public function getSessionInitiatorPath()
+    {
         return $this->sessionInitiatorPath;
     }
 
-    private function getAttribute($request, $attribute) {
+    private function getAttribute($request, $attribute)
+    {
         if ($this->useHeaders) {
             return $request->headers->get(strtolower($attribute), null);
         } else {
@@ -99,19 +105,22 @@ class Shibboleth {
         }
     }
 
-    public function isAuthenticated(Request $request) {
+    public function isAuthenticated(Request $request)
+    {
         return (bool)$this->getAttribute($request, 'Shib-Identity-Provider');
     }
 
-    public function getUser(Request $request) {
+    public function getUser(Request $request)
+    {
         return  $this->getAttribute($request, $this->usernameAttribute);
     }
-    
+
     /**
      * Extract Shibboleth attributes from request
      * @param Request $request
      */
-    public function getAttributes(Request $request) {
+    public function getAttributes(Request $request)
+    {
         $attributes = array();
         if ($this->isAuthenticated($request)) {
             foreach ($this->getAttributeDefinitions() as $name => $def) {
@@ -124,15 +133,17 @@ class Shibboleth {
                 if (null === $value) {
                     //$this->attributes[$name] = array();
                 } else {
-                    if(@$def['charset'] == 'UTF-8') $value = utf8_decode($value);
-                    $attributes[$name] = (@$def['multivalue'])? explode(';',$value) : $value;
+                    if (@$def['charset'] == 'UTF-8') {
+                        $value = utf8_decode($value);
+                    }
+                    $attributes[$name] = (@$def['multivalue'])? explode(';', $value) : $value;
                 }
             }
         }
         return $attributes;
     }
 
-    function getAttributeDefinitions()
+    public function getAttributeDefinitions()
     {
         return $this->attributeDefinitions;
     }
@@ -140,12 +151,13 @@ class Shibboleth {
     /**
      * Returns shibboleth session URL
      */
-    function getHandlerUrl(Request $request) {
+    public function getHandlerUrl(Request $request)
+    {
         return (($this->isSecuredHandler())? 'https://' : 'http://' )
             . $request->getHost()
             . $this->handlerPath;
     }
-    
+
     /**
      * Returns URL to initiate login session. After successfull login, the user will be redirected
      * to the optional target page. The target can be an absolute or relative URL.
@@ -153,20 +165,24 @@ class Shibboleth {
      * @param string $targetUrl URL to redirect to after successfull login. Defaults to the current request URL.
      * @return string           The absolute URL to initiate a session
      */
-    function getLoginUrl(Request $request, $targetUrl = null) {
+    public function getLoginUrl(Request $request, $targetUrl = null)
+    {
         // convert to absolute URL if not yet absolute.
-        if (empty($targetUrl)) $targetUrl = $request->getUri();
+        if (empty($targetUrl)) {
+            $targetUrl = $request->getUri();
+        }
         return $this->getHandlerURL($request) . $this->getSessionInitiatorPath() . '?target=' . urlencode($targetUrl);
     }
-    
+
     /**
      * Returns URL to invalidate the shibboleth session.
      */
-    function getLogoutUrl(Request $request, $return = null) {
+    public function getLogoutUrl(Request $request, $return = null)
+    {
         $logout_redirect = $this->getAttribute($request, 'Shib-Logouturl');
         if (!empty($logout_redirect)) {
             return $this->getHandlerUrl($request) . '/Logout?return='. urlencode($logout_redirect
-                    . (empty($return)? '' : '?return='.$return) );
+                    . (empty($return)? '' : '?return='.$return));
         } elseif (!empty($return)) {
             return $this->getHandlerUrl($request) . '/Logout?return='.urlencode($return);
         } else {
@@ -174,10 +190,14 @@ class Shibboleth {
         }
     }
 
-    function addAttributeDefinition($def) {
-        if (!isset($def['multivalue'])) $def['multivalue'] = false;
-        if (!isset($def['charset'])) $def['charset'] = 'ISO-8859-1';
+    public function addAttributeDefinition($def)
+    {
+        if (!isset($def['multivalue'])) {
+            $def['multivalue'] = false;
+        }
+        if (!isset($def['charset'])) {
+            $def['charset'] = 'ISO-8859-1';
+        }
         $this->attributeDefinitions[$def['alias']] = $def;
-    }    
-    
+    }
 }

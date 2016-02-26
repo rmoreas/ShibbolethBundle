@@ -26,7 +26,7 @@
 
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-interface ShibbolethUserProviderInterface extends UserProviderInterface{
-
-	function createUser(ShibbolethUserToken $token);
+interface ShibbolethUserProviderInterface extends UserProviderInterface
+{
+    public function createUser(ShibbolethUserToken $token);
 }

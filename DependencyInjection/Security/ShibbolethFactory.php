@@ -33,23 +33,22 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
 
-class ShibbolethFactory implements SecurityFactoryInterface {
-    
- 
+class ShibbolethFactory implements SecurityFactoryInterface
+{
     public function create(ContainerBuilder $container, $id, $config, $userProviderId, $defaultEntryPoint)
     {
         // Auth provider
         $providerId = $this->createAuthProvider($container, $id, $config, $userProviderId);
-        
+
         // entry point
         $entryPointId = $this->createEntryPoint($container, $id, $config, $defaultEntryPoint);
 
         // Listener
         $listenerId = $this->createListener($container, $id, $config, $userProviderId, $entryPointId);
-        
+
         return array($providerId, $listenerId, $entryPointId);
     }
-        
+
     public function getKey()
     {
         return 'shibboleth';
@@ -59,7 +58,7 @@ class ShibbolethFactory implements SecurityFactoryInterface {
     {
         return 'pre_auth';
     }
-    
+
     public function addConfiguration(NodeDefinition $node)
     {
         $node
@@ -69,7 +68,7 @@ class ShibbolethFactory implements SecurityFactoryInterface {
                 ->end()
         ;
     }
-    
+
     protected function createEntryPoint($container, $id, $config, $defaultEntryPoint)
     {
         if (null !== $defaultEntryPoint) {
@@ -85,7 +84,7 @@ class ShibbolethFactory implements SecurityFactoryInterface {
         }
         return $entryPointId;
     }
-    
+
     protected function createAuthProvider(ContainerBuilder $container, $id, $config, $userProviderId)
     {
         $providerId = 'security.authentication.provider.shibboleth.'.$id;
@@ -97,17 +96,18 @@ class ShibbolethFactory implements SecurityFactoryInterface {
         return $providerId;
     }
 
-    protected function createListener($container, $id, $config, $userProvider,$entryPoint)
-    {    
+    protected function createListener($container, $id, $config, $userProvider, $entryPoint)
+    {
         $listenerId = 'security.authentication.listener.shibboleth';
         $listener = new DefinitionDecorator($listenerId);
         $listener->replaceArgument(3, $id);
-        if ($entryPoint) $listener->replaceArgument(4, new Reference($entryPoint));
+        if ($entryPoint) {
+            $listener->replaceArgument(4, new Reference($entryPoint));
+        }
 
         $listenerId .= '.'.$id;
         $container->setDefinition($listenerId, $listener);
-        
+
         return $listenerId;
     }
-
 }

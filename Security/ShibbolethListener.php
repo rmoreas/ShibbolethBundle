@@ -38,8 +38,8 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class ShibbolethListener implements ListenerInterface {
-
+class ShibbolethListener implements ListenerInterface
+{
     private $securityContext;
     private $authenticationManager;
     private $providerKey;
@@ -48,8 +48,16 @@ class ShibbolethListener implements ListenerInterface {
     private $ignoreFailure;
     private $dispatcher;
     private $shibboleth;
-    
-    public function __construct(SecurityContextInterface $securityContext, AuthenticationManagerInterface $authenticationManager, Shibboleth $shibboleth, $providerKey = null, AuthenticationEntryPointInterface $authenticationEntryPoint = null, LoggerInterface $logger = null, EventDispatcherInterface $dispatcher = null) {
+
+    public function __construct(
+        SecurityContextInterface $securityContext,
+        AuthenticationManagerInterface $authenticationManager,
+        Shibboleth $shibboleth,
+        $providerKey = null,
+        AuthenticationEntryPointInterface $authenticationEntryPoint = null,
+        LoggerInterface $logger = null,
+        EventDispatcherInterface $dispatcher = null
+    ) {
         if (empty($providerKey)) {
             throw new \InvalidArgumentException('$providerKey must not be empty.');
         }
@@ -63,23 +71,29 @@ class ShibbolethListener implements ListenerInterface {
         $this->dispatcher = $dispatcher;
         $this->shibboleth = $shibboleth;
     }
-        
-    public function handle(GetResponseEvent $event) {
 
+    public function handle(GetResponseEvent $event)
+    {
         $request = $event->getRequest();
 
-        if (!$this->shibboleth->isAuthenticated($request)) { return; }
-        
+        if (!$this->shibboleth->isAuthenticated($request)) {
+            return;
+        }
+
         if (null !== $this->logger) {
             $this->logger->debug(sprintf('Checking security context token: %s', $this->securityContext->getToken()));
         }
-            
+
         $username = $this->shibboleth->getUser($request);
-        
-        if (null !== $this->logger) $this->logger->debug(sprintf('Shibboleth service returned user: %s', $username));
+
+        if (null !== $this->logger) {
+            $this->logger->debug(sprintf('Shibboleth service returned user: %s', $username));
+        }
         if (null !== $token = $this->securityContext->getToken()) {
             if ($token instanceof ShibbolethUserToken && $token->isAuthenticated()) {
-                if ( $token->getUsername() === $username) return;
+                if ($token->getUsername() === $username) {
+                    return;
+                }
             } elseif ($token->isAuthenticated()) {
                 return;
             }
@@ -88,13 +102,15 @@ class ShibbolethListener implements ListenerInterface {
             $attributes = $this->shibboleth->getAttributes($request);
             $this->logger->debug(sprintf('Shibboleth returned attributes from: %s', @$attributes['identityProvider'][0]));
             $token = $this->authenticationManager->authenticate(new ShibbolethUserToken($username, $attributes));
-            
-            if (null !== $this->logger) $this->logger->debug(sprintf('ShibbolethListener: received token: %s', $token));
+
+            if (null !== $this->logger) {
+                $this->logger->debug(sprintf('ShibbolethListener: received token: %s', $token));
+            }
 
             if ($token instanceof TokenInterface) {
                 if (null !== $this->logger) {
                     $this->logger->debug(sprintf('Authentication success: %s', $token));
-                }    
+                }
                 $this->securityContext->setToken($token);
 
                 if (null !== $this->dispatcher) {
@@ -115,6 +131,6 @@ class ShibbolethListener implements ListenerInterface {
             if ($this->authenticationEntryPoint) {
                 return $event->setResponse($this->authenticationEntryPoint->start($request, $e));
             }
-        }       
+        }
     }
 }

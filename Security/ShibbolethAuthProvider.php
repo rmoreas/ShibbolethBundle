@@ -23,6 +23,7 @@
  * @license     http://www.gnu.org/licenses/lgpl-3.0-standalone.html LGPL-3
  */
 namespace KULeuven\ShibbolethBundle\Security;
+
 use KULeuven\ShibbolethBundle\Service\Shibboleth;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
@@ -35,90 +36,96 @@ use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
-class ShibbolethAuthProvider implements AuthenticationProviderInterface {
+class ShibbolethAuthProvider implements AuthenticationProviderInterface
+{
+    private $userProvider;
+    private $userChecker;
+    private $defaultRoles;
+    private $logger;
 
-	private $userProvider;
-	private $userChecker;
-	private $defaultRoles;
-	private $logger;
+    public function __construct(
+        UserProviderInterface $userProvider,
+        UserCheckerInterface $userChecker,
+        LoggerInterface $logger = null
+    ) {
+        $this->userProvider = $userProvider;
+        $this->userChecker = $userChecker;
+        $this->logger = $logger;
+        $this->defaultRoles = array('ROLE_USER');
+    }
 
-	public function __construct(UserProviderInterface $userProvider,
-			UserCheckerInterface $userChecker, LoggerInterface $logger = null) {
-		$this->userProvider = $userProvider;
-		$this->userChecker = $userChecker;
-		$this->logger = $logger;
-		$this->defaultRoles = array('ROLE_USER');
-	}
+    public function authenticate(TokenInterface $token)
+    {
+        if (!$this->supports($token)) {
+            return null;
+        }
 
-	public function authenticate(TokenInterface $token) {
+        if (!$user = $token->getUser()) {
+            throw new BadCredentialsException('No pre-authenticated shibboleth principal found in request.');
+        }
 
-		if (!$this->supports($token)) {
-			return null;
-		}
+        try {
+            $user = $this->retrieveUser($token);
 
-		if (!$user = $token->getUser()) {
-			throw new BadCredentialsException(
-					'No pre-authenticated shibboleth principal found in request.');
-		}
+            $this->checkAuthentication($user, $token);
+            if ($user instanceof UserInterface) {
+                $this->userChecker->checkPostAuth($user);
+            }
 
-		try {
-			$user = $this->retrieveUser($token);
+            $authenticatedToken = new ShibbolethUserToken($user, $token->getAttributes());
+            $authenticatedToken->setAuthenticated(true);
+            if (null !== $this->logger) {
+                $this->logger
+                        ->debug(sprintf(
+                            'ShibbolethAuthProvider: authenticated token: %s',
+                            $authenticatedToken
+                        ));
+            }
+            return $authenticatedToken;
+        } catch (UsernameNotFoundException $notFound) {
+            throw $notFound;
+        }
+    }
 
-			$this->checkAuthentication($user, $token);
-			if ($user instanceof UserInterface)
-				$this->userChecker->checkPostAuth($user);
+    public function checkAuthentication($user, $token)
+    {
+        return true;
+    }
 
-			$authenticatedToken = new ShibbolethUserToken($user,
-					$token->getAttributes());
-			$authenticatedToken->setAuthenticated(true);
-			if (null !== $this->logger)
-				$this->logger
-						->debug(
-								sprintf(
-										'ShibbolethAuthProvider: authenticated token: %s',
-										$authenticatedToken));
-			return $authenticatedToken;
+    public function retrieveUser($token)
+    {
+        try {
+            $user = $this->userProvider
+                    ->loadUserByUsername($token->getUsername());
+            if (null !== $this->logger) {
+                $this->logger
+                        ->debug(sprintf(
+                            'ShibbolethAuthProvider: userProvider returned: %s',
+                            $user->getUsername()
+                        ));
+            }
 
-		} catch (UsernameNotFoundException $notFound) {
-			throw $notFound;
-		} 
-	}
+            if (!$user instanceof UserInterface) {
+                throw new AuthenticationServiceException(
+                    'The user provider must return a UserInterface object.'
+                );
+            }
+        } catch (UsernameNotFoundException $notFound) {
+            if ($this->userProvider instanceof ShibbolethUserProviderInterface) {
+                $user = $this->userProvider->createUser($token);
+                if ($user === null) {
+                    $user = $token->getUsername();
+                }
+            } else {
+                throw $notFound;
+            }
+        }
 
-	public function checkAuthentication($user, $token) {
-		return true;
-	}
+        return $user;
+    }
 
-	public function retrieveUser($token) {
-		try {
-			$user = $this->userProvider
-					->loadUserByUsername($token->getUsername());
-			if (null !== $this->logger)
-				$this->logger
-						->debug(
-								sprintf(
-										'ShibbolethAuthProvider: userProvider returned: %s',
-										$user->getUsername()));
-
-			if (!$user instanceof UserInterface) {
-				throw new AuthenticationServiceException(
-						'The user provider must return a UserInterface object.');
-			}
-
-		} catch (UsernameNotFoundException $notFound) {
-			if ($this->userProvider instanceof ShibbolethUserProviderInterface) {
-				$user = $this->userProvider->createUser($token);
-				if ($user === null) {
-					$user = $token->getUsername();
-				}
-			} else {
-				throw $notFound;
-			}
-		}
-
-		return $user;
-	}
-
-	public function supports(TokenInterface $token) {
-		return $token instanceof ShibbolethUserToken;
-	}
+    public function supports(TokenInterface $token)
+    {
+        return $token instanceof ShibbolethUserToken;
+    }
 }
