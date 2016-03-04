@@ -34,31 +34,32 @@ class Shibboleth
     private $sessionInitiatorPath = '/Login';
     private $usernameAttribute = 'Shib-Person-uid';
     private $attributeDefinitions = array(
-        'uid'           => array('header'=> 'Shib-Person-uid', 'multivalue'=> false),
-        'cn'            => array('header'=> 'Shib-Person-commonName', 'multivalue'=> false),
-        'sn'            => array('header'=> 'Shib-Person-surname', 'multivalue'=> false),
-        'givenName'     => array('header'=> 'Shib-Person-givenName', 'multivalue'=> false),
-        'mail'          => array('header'=> 'Shib-Person-mail', 'multivalue'=> true),
-        'ou'            => array('header'=> 'Shib-Person-ou', 'multivalue'=> true),
-        'telephoneNumber' => array('header'=> 'Shib-Person-telephoneNumber', 'multivalue'=> true),
-        'facsimileTelephoneNumber' => array('header'=> 'Shib-Person-facsimileTelephoneNumber', 'multivalue'=> true),
-        'mobile'        => array('header'=> 'Shib-Person-mobile', 'multivalue'=> true),
-        'postalAddress' => array('header'=> 'Shib-Person-postalAddress', 'multivalue'=> true),
-        'affiliation'   => array('header'=> 'Shib-EP-UnscopedAffiliation', 'multivalue'=> true),
-        'scopedAffiliation' => array('header'=> 'Shib-EP-ScopedAffiliation', 'multivalue'=> true),
-        'orgUnitDN'     => array('header'=> 'Shib-EP-OrgUnitDN', 'multivalue'=> true),
-        'orgDN'         => array('header'=> 'Shib-EP-OrgDN', 'multivalue'=> false),
-        'logoutURL'     => array('header'=> 'Shib-logoutURL', 'multivalue'=> false),
-        'identityProvider' => array('header'=> 'Shib-Identity-Provider', 'multivalue'=> false),
-        'originSite'    => array('header'=> 'Shib-Origin-Site', 'multivalue'=> false),
-        'authenticationInstant' => array('header'=> 'Shib-Authentication-Instant', 'multivalue' => false),
-        'employeeType' => array('header'=> 'Shib-KUL-employeeType', 'multivalue'=> false),
-        'studentType' => array('header'=> 'Shib-KUL-studentType', 'multivalue'=> true),
-        'primouNumber' => array('header'=> 'Shib-KUL-PrimouNumber', 'multivalue'=> true),
-        'ouNumber' => array('header'=> 'Shib-KUL-ouNumber', 'multivalue'=> true),
-        'dipl' => array('header'=> 'Shib-KUL-dipl', 'multivalue'=> true),
-        'opl' => array('header'=> 'Shib-KUL-opl', 'multivalue'=> true),
-        'campus' => array('header'=> 'Shib-KUL-campus', 'multivalue'=> false)
+        'uid'           => array('header'=> 'Shib-Person-uid', 'server' => 'uid', 'multivalue'=> false),
+        'cn'            => array('header'=> 'Shib-Person-commonName', 'server' => 'cn', 'multivalue'=> false),
+        'sn'            => array('header'=> 'Shib-Person-surname', 'server' => 'sn', 'multivalue'=> false),
+        'givenName'     => array('header'=> 'Shib-Person-givenName', 'server' => 'givenName', 'multivalue'=> false),
+        'mail'          => array('header'=> 'Shib-Person-mail', 'server' => 'mail', 'multivalue'=> true),
+        'ou'            => array('header'=> 'Shib-Person-ou', 'server' => 'ou', 'multivalue'=> true),
+        'telephoneNumber' => array('header'=> 'Shib-Person-telephoneNumber', 'server' => 'telephoneNumber', 'multivalue'=> true),
+        'facsimileTelephoneNumber' => array('header'=> 'Shib-Person-facsimileTelephoneNumber', 'server' => 'facsimileTelephoneNumber', 'multivalue'=> true),
+        'mobile'        => array('header'=> 'Shib-Person-mobile', 'server' => 'mobile', 'multivalue'=> true),
+        'postalAddress' => array('header'=> 'Shib-Person-postalAddress', 'server' => 'postalAddress', 'multivalue'=> true),
+        'affiliation'   => array('header'=> 'Shib-EP-UnscopedAffiliation', 'server' => 'affiliation', 'multivalue'=> true),
+        'scopedAffiliation' => array('header'=> 'Shib-EP-ScopedAffiliation', 'server' => 'scopedAffiliation', 'multivalue'=> true),
+        'orgUnitDN'     => array('header'=> 'Shib-EP-OrgUnitDN', 'server' => 'orgUnitDN', 'multivalue'=> true),
+        'orgDN'         => array('header'=> 'Shib-EP-OrgDN', 'server' => 'orgDN', 'multivalue'=> false),
+        'logoutURL'     => array('header'=> 'Shib-logoutURL', 'server' => 'logoutURL', 'multivalue'=> false),
+        'identityProvider' => array('header'=> 'Shib-Identity-Provider', 'server' => 'identityProvider', 'multivalue'=> false),
+        'originSite'    => array('header'=> 'Shib-Origin-Site', 'server' => 'originSite', 'multivalue'=> false),
+        'authenticationInstant' => array('header'=> 'Shib-Authentication-Instant', 'server' => 'authenticationInstant', 'multivalue' => false),
+        'employeeType' => array('header'=> 'Shib-KUL-employeeType', 'server' => 'employeeType', 'multivalue'=> false),
+        'studentType' => array('header'=> 'Shib-KUL-studentType', 'server' => 'studentType', 'multivalue'=> true),
+        'primouNumber' => array('header'=> 'Shib-KUL-PrimouNumber', 'server' => 'primouNumber', 'multivalue'=> true),
+        'ouNumber' => array('header'=> 'Shib-KUL-ouNumber', 'server' => 'ouNumber', 'multivalue'=> true),
+        'dipl' => array('header'=> 'Shib-KUL-dipl', 'server' => 'dipl', 'multivalue'=> true),
+        'opl' => array('header'=> 'Shib-KUL-opl', 'server' => 'opl', 'multivalue'=> true),
+        'campus' => array('header'=> 'Shib-KUL-campus', 'server' => 'campus', 'multivalue'=> false),
+        'logoutURL' => array('header' => 'Shib-logoutURL', 'server' => 'Shib-logoutURL', 'multivalue' => false)
     );
     private $useHeaders = true;
 
@@ -95,11 +96,11 @@ class Shibboleth
     private function getAttribute($request, $attribute)
     {
         if ($this->useHeaders) {
-            return $request->headers->get(strtolower($attribute), null);
+            return $request->headers->get(strtolower($this->attributeDefinitions[$attribute]['header']), null);
         } else {
-            $value = $request->server->get($attribute, null);
+            $value = $request->server->get($this->attributeDefinitions[$attribute]['server'], null);
             if ($value === null) {
-                $value = $request->server->get(str_replace('-', '_', $attribute), null);
+                $value = $request->server->get(str_replace('-', '_', $this->attributeDefinitions[$attribute]['server']), null);
             }
             return $value;
         }
@@ -107,7 +108,7 @@ class Shibboleth
 
     public function isAuthenticated(Request $request)
     {
-        return (bool)$this->getAttribute($request, 'Shib-Identity-Provider');
+        return (bool)$this->getAttribute($request, 'identityProvider');
     }
 
     public function getUser(Request $request)
@@ -124,11 +125,7 @@ class Shibboleth
         $attributes = array();
         if ($this->isAuthenticated($request)) {
             foreach ($this->getAttributeDefinitions() as $name => $def) {
-                if ($this->useHeaders) {
-                    $value = $this->getAttribute($request, $def['header']);
-                } else {
-                    $value = $this->getAttribute($request, $name);
-                }
+                $value = $this->getAttribute($request, $name);
 
                 if (null === $value) {
                     //$this->attributes[$name] = array();
@@ -179,8 +176,8 @@ class Shibboleth
      */
     public function getLogoutUrl(Request $request, $return = null)
     {
-        $logout_redirect = $this->getAttribute($request, 'Shib-logoutURL');
-        
+        $logout_redirect = $this->getAttribute($request, 'logoutURL');
+
         if (!empty($logout_redirect)) {
             return $this->getHandlerUrl($request) . '/Logout?return='. urlencode($logout_redirect
                     . (empty($return)? '' : '?return='.$return));
@@ -198,6 +195,9 @@ class Shibboleth
         }
         if (!isset($def['charset'])) {
             $def['charset'] = 'ISO-8859-1';
+        }
+        if ($def['server'] === NULL) {
+            $def['server'] = $def['alias'];
         }
         $this->attributeDefinitions[$def['alias']] = $def;
     }

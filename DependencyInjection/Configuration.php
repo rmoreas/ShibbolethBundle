@@ -61,13 +61,14 @@ class Configuration implements ConfigurationInterface
                     ->prototype('array')
                         ->children()
                             ->scalarNode('header')->isRequired()->end()
+                            ->scalarNode('server')->defaultValue(null)->end()
                             ->booleanNode('multivalue')->defaultValue(false)->end()
                             ->scalarNode('charset')->defaultValue('UTF-8')->end()
                         ->end()
                 ->end()
              ->end()
         ;
-        
+
 
         return $treeBuilder;
     }
