@@ -49,7 +49,7 @@ class Shibboleth
         'orgUnitDN'     => array('header'=> 'Shib-EP-OrgUnitDN', 'server' => 'orgUnitDN', 'multivalue'=> true),
         'orgDN'         => array('header'=> 'Shib-EP-OrgDN', 'server' => 'orgDN', 'multivalue'=> false),
         'logoutURL'     => array('header'=> 'Shib-logoutURL', 'server' => 'logoutURL', 'multivalue'=> false),
-        'identityProvider' => array('header'=> 'Shib-Identity-Provider', 'server' => 'identityProvider', 'multivalue'=> false),
+        'identityProvider' => array('header'=> 'Shib-Identity-Provider', 'server' => 'Shib-Identity-Provider', 'multivalue'=> false),
         'originSite'    => array('header'=> 'Shib-Origin-Site', 'server' => 'originSite', 'multivalue'=> false),
         'authenticationInstant' => array('header'=> 'Shib-Authentication-Instant', 'server' => 'authenticationInstant', 'multivalue' => false),
         'employeeType' => array('header'=> 'Shib-KUL-employeeType', 'server' => 'employeeType', 'multivalue'=> false),
