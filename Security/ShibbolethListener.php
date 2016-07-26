@@ -131,6 +131,10 @@ class ShibbolethListener implements ListenerInterface
             if ($this->authenticationEntryPoint) {
                 return $event->setResponse($this->authenticationEntryPoint->start($request, $e));
             }
+        } catch (\Exception $e) {
+            if (null !== $this->logger) {
+                $this->logger->info(sprintf('Shibboleth authnetication failed because of unkown error: %s', $e->getMessage()));
+            }
         }
     }
 }
