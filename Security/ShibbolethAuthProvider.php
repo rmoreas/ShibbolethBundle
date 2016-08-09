@@ -24,6 +24,7 @@
  */
 namespace KULeuven\ShibbolethBundle\Security;
 use KULeuven\ShibbolethBundle\Service\Shibboleth;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -33,7 +34,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 class ShibbolethAuthProvider implements AuthenticationProviderInterface {
 

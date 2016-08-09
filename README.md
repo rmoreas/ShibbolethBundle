@@ -5,8 +5,8 @@ This bundle adds a shibboleth authentication provider for your Symfony2 project.
 
 Requirements
 ------------
-* [PHP][@php] 5.3.3 and up.
-* [Symfony 2.1][@symfony]
+* [PHP](http://php.net) 5.3.3 and up.
+* [Symfony 2.2+][http://symfony.com]
 
 Installation
 ------------
