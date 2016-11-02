@@ -26,7 +26,7 @@ ShibbolethBundle is composer-friendly.
             "type": "vcs",
             "url": "git@github.com:rmoreas/ShibbolethBundle.git"
         }
-    ],	
+    ],
 ```
 Now tell composer to download the bundle by running the command:
 
@@ -68,7 +68,7 @@ Add following lines to the .htaccess file in your projects web folder
 	require shibboleth
 ```
 
-### 2. Setup authentication firewall 
+### 2. Setup authentication firewall
 
 ```yml
 	# app/config/security.yml
@@ -93,7 +93,7 @@ Possible configuration parameters are:
 		handler_path: /Shibboleth.sso
 		secured_handler: true
 		session_initiator_path: /Login
-		username_attribute: Shib-Person-uid
+		username_attribute: uid
 		use_headers: true
 ```
 
@@ -135,8 +135,9 @@ By default, the bundle exposes several Shibboleth attributes through the user to
 | Shib-KUL-dipl                        | dipl                     |
 | Shib-KUL-opl                         | opl                      |
 | Shib-KUL-campus                      | campus                   |
+| Shib-logoutURL                       | logoutURL                |
 
-If for some reason you want to pass additional attributes (for example custom attributes), you can configure them this way:
+If for some reason you want to pass additional attributes (for example custom attributes) or overwrite existing, you can configure them this way:
 
 ```yml
 # app/config/config.yml
@@ -148,6 +149,9 @@ shibboleth:
 		bar:
 			header: shib-acme-bar
 			multivalue: true  # attribute contains multiple values (default is false, i.e. attribute is scalar)
+        identityProvider:
+            header: REDIRECT_Shib-Identity-Provider # Change the existing attribute
+            server: REDIRECT_Shib_Identity_Provider # Change the name of the variable with use_header option off
 ```
 
 The key containing the configuration of each attribute will be its alias. That means the value(s) of the `shib-acme-foo` and `shib-acme-bar` attributes can be retrieved with:
@@ -169,7 +173,7 @@ If you store users in a database, they can be created on the fly when a users lo
 This example uses Propel ORM to store users.
 
 ```php
-	<?php 
+	<?php
 	namespace YourProjectNamespace\Security;
 
 	use YourProjectNamespace\Model\User;
@@ -195,10 +199,10 @@ This example uses Propel ORM to store users.
 				throw new UsernameNotFoundException("User ".$username. " not found.");
 			}
 		}
-		
+
 		public function createUser(ShibbolethUserToken $token){
-			// Create user object using shibboleth attributes stored in the token. 
-			// 
+			// Create user object using shibboleth attributes stored in the token.
+			//
 			$user = new User();
 			$user->setUid($token->getUsername());
 			$user->setSurname($token->getSurname());
@@ -208,7 +212,7 @@ This example uses Propel ORM to store users.
 			if ($token->isStudent()) $user->addRole('ROLE_STUDENT');
 			elseif ($token->isStaff()) $user->addRole('ROLE_STAFF');
 			else $user->addRole('ROLE_GUEST');
-			
+
 			$user->save();
 			return $user;
 		}
@@ -228,4 +232,3 @@ This example uses Propel ORM to store users.
 		}
 	}
 ```
-

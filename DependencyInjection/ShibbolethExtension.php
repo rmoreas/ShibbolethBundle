@@ -48,29 +48,29 @@ class ShibbolethExtension extends Extension
         $loader->load('services.xml');
 
         if (isset($config['handler_path'])) {
-            $container->setParameter('shibboleth.handler_path',$config['handler_path']);
+            $container->setParameter('shibboleth.handler_path', $config['handler_path']);
         }
         if (isset($config['secured_handler'])) {
-            $container->setParameter('shibboleth.secured_handler',$config['secured_handler']);
+            $container->setParameter('shibboleth.secured_handler', $config['secured_handler']);
         }
         if (isset($config['session_initiator_path'])) {
-            $container->setParameter('shibboleth.session_initiator_path',$config['session_initiator_path']);
+            $container->setParameter('shibboleth.session_initiator_path', $config['session_initiator_path']);
         }
         if (isset($config['username_attribute'])) {
-            $container->setParameter('shibboleth.username_attribute',$config['username_attribute']);
+            $container->setParameter('shibboleth.username_attribute', $config['username_attribute']);
         }
         if (isset($config['attribute_definitions'])) {
-            $container->setParameter('shibboleth.attribute_definitions',$config['attribute_definitions']);
+            $container->setParameter('shibboleth.attribute_definitions', $config['attribute_definitions']);
         } else {
-            $container->setParameter('shibboleth.attribute_definitions',array());            
+            $container->setParameter('shibboleth.attribute_definitions', array());
         }
         if (isset($config['use_headers'])) {
-            $container->setParameter('shibboleth.use_headers',$config['use_headers']);
+            $container->setParameter('shibboleth.use_headers', $config['use_headers']);
         } else {
-            $container->setParameter('shibboleth.use_headers',true);
+            $container->setParameter('shibboleth.use_headers', true);
         }
         if (isset($config['logout_target'])) {
-            $container->setParameter('shibboleth.logout_target',$config['logout_target']);
+            $container->setParameter('shibboleth.logout_target', $config['logout_target']);
         }
     }
 }
