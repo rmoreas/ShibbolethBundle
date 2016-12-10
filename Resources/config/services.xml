@@ -9,7 +9,7 @@
         <parameter key="shibboleth.handler_path">/Shibboleth.sso</parameter>
         <parameter key="shibboleth.secured_handler">true</parameter>
         <parameter key="shibboleth.session_initiator_path">/Login</parameter>
-        <parameter key="shibboleth.username_attribute">shib-person-uid</parameter>
+        <parameter key="shibboleth.username_attribute">uid</parameter>
         <parameter key="shibboleth.attribute_definitions" type="collection" />
         <parameter key="shibboleth.use_headers" />
         <parameter key="shibboleth.logout_target"/>

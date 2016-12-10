@@ -32,7 +32,7 @@ class Shibboleth
     private $handlerPath = '/Shibboleth.sso';
     private $securedHandler = true;
     private $sessionInitiatorPath = '/Login';
-    private $usernameAttribute = 'Shib-Person-uid';
+    private $usernameAttribute = 'uid';
     private $attributeDefinitions = array(
         'uid'           => array('header'=> 'Shib-Person-uid', 'server' => 'uid', 'multivalue'=> false),
         'cn'            => array('header'=> 'Shib-Person-commonName', 'server' => 'cn', 'multivalue'=> false),
