@@ -40,16 +40,19 @@ class ShibbolethAuthProvider implements AuthenticationProviderInterface
 {
     private $userProvider;
     private $userChecker;
+    private $providerKey;
     private $defaultRoles;
     private $logger;
 
     public function __construct(
         UserProviderInterface $userProvider,
         UserCheckerInterface $userChecker,
+        $providerKey,
         LoggerInterface $logger = null
     ) {
         $this->userProvider = $userProvider;
         $this->userChecker = $userChecker;
+        $this->providerKey = $providerKey;
         $this->logger = $logger;
         $this->defaultRoles = array('ROLE_USER');
     }
@@ -72,7 +75,7 @@ class ShibbolethAuthProvider implements AuthenticationProviderInterface
                 $this->userChecker->checkPostAuth($user);
             }
 
-            $authenticatedToken = new ShibbolethUserToken($user, $token->getAttributes());
+            $authenticatedToken = new ShibbolethUserToken($this->providerKey, $user, $token->getAttributes());
             $authenticatedToken->setAuthenticated(true);
             if (null !== $this->logger) {
                 $this->logger
@@ -126,6 +129,7 @@ class ShibbolethAuthProvider implements AuthenticationProviderInterface
 
     public function supports(TokenInterface $token)
     {
-        return $token instanceof ShibbolethUserToken;
+        return $token instanceof ShibbolethUserToken
+                && $this->providerKey == $token->getProviderKey();
     }
 }

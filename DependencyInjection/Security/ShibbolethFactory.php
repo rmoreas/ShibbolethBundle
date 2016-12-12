@@ -91,7 +91,7 @@ class ShibbolethFactory implements SecurityFactoryInterface
         $container
             ->setDefinition($providerId, new DefinitionDecorator('security.authentication.provider.shibboleth'))
             ->replaceArgument(0, new Reference($userProviderId))
-        //    ->replaceArgument(2, $id)
+            ->replaceArgument(2, $id)
         ;
         return $providerId;
     }

@@ -53,7 +53,7 @@ class ShibbolethListener implements ListenerInterface
         SecurityContextInterface $securityContext,
         AuthenticationManagerInterface $authenticationManager,
         Shibboleth $shibboleth,
-        $providerKey = null,
+        $providerKey,
         AuthenticationEntryPointInterface $authenticationEntryPoint = null,
         LoggerInterface $logger = null,
         EventDispatcherInterface $dispatcher = null
@@ -89,19 +89,22 @@ class ShibbolethListener implements ListenerInterface
         if (null !== $this->logger) {
             $this->logger->debug(sprintf('Shibboleth service returned user: %s', $username));
         }
+
         if (null !== $token = $this->securityContext->getToken()) {
             if ($token instanceof ShibbolethUserToken && $token->isAuthenticated()) {
-                if ($token->getUsername() === $username) {
+                if ($token->getProviderKey() === $this->providerKey && $token->getUsername() === $username) {
                     return;
                 }
             } elseif ($token->isAuthenticated()) {
                 return;
             }
         }
+
         try {
             $attributes = $this->shibboleth->getAttributes($request);
-            $this->logger->debug(sprintf('Shibboleth returned attributes from: %s', @$attributes['identityProvider'][0]));
-            $token = $this->authenticationManager->authenticate(new ShibbolethUserToken($username, $attributes));
+            $this->logger->debug(sprintf('Shibboleth returned attributes from: %s', @$attributes['identityProvider']));
+            $token = $this->authenticationManager->authenticate(
+                    new ShibbolethUserToken($this->providerKey, $username, $attributes));
 
             if (null !== $this->logger) {
                 $this->logger->debug(sprintf('ShibbolethListener: received token: %s', $token));
@@ -133,7 +136,7 @@ class ShibbolethListener implements ListenerInterface
             }
         } catch (\Exception $e) {
             if (null !== $this->logger) {
-                $this->logger->info(sprintf('Shibboleth authnetication failed because of unkown error: %s', $e->getMessage()));
+                $this->logger->info(sprintf('Shibboleth authentication failed because of unknown error: %s', $e->getMessage()));
             }
         }
     }
