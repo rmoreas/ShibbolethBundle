@@ -28,11 +28,10 @@ use KULeuven\ShibbolethBundle\Service\Shibboleth;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Security\Http\SecurityEvents;
@@ -43,9 +42,7 @@ class ShibbolethListener implements ListenerInterface
     private $securityContext;
     private $authenticationManager;
     private $providerKey;
-    private $authenticationEntryPoint;
     private $logger;
-    private $ignoreFailure;
     private $dispatcher;
     private $shibboleth;
 
@@ -53,8 +50,7 @@ class ShibbolethListener implements ListenerInterface
         SecurityContextInterface $securityContext,
         AuthenticationManagerInterface $authenticationManager,
         Shibboleth $shibboleth,
-        $providerKey = null,
-        AuthenticationEntryPointInterface $authenticationEntryPoint = null,
+        $providerKey,
         LoggerInterface $logger = null,
         EventDispatcherInterface $dispatcher = null
     ) {
@@ -65,9 +61,7 @@ class ShibbolethListener implements ListenerInterface
         $this->securityContext = $securityContext;
         $this->authenticationManager = $authenticationManager;
         $this->providerKey = $providerKey;
-        $this->authenticationEntryPoint = $authenticationEntryPoint;
         $this->logger = $logger;
-        $this->ignoreFailure = false;
         $this->dispatcher = $dispatcher;
         $this->shibboleth = $shibboleth;
     }
@@ -89,19 +83,22 @@ class ShibbolethListener implements ListenerInterface
         if (null !== $this->logger) {
             $this->logger->debug(sprintf('Shibboleth service returned user: %s', $username));
         }
+
         if (null !== $token = $this->securityContext->getToken()) {
             if ($token instanceof ShibbolethUserToken && $token->isAuthenticated()) {
-                if ($token->getUsername() === $username) {
+                if ($token->getProviderKey() === $this->providerKey && $token->getUsername() === $username) {
                     return;
                 }
             } elseif ($token->isAuthenticated()) {
                 return;
             }
         }
+
         try {
             $attributes = $this->shibboleth->getAttributes($request);
-            $this->logger->debug(sprintf('Shibboleth returned attributes from: %s', @$attributes['identityProvider'][0]));
-            $token = $this->authenticationManager->authenticate(new ShibbolethUserToken($username, $attributes));
+            $this->logger->debug(sprintf('Shibboleth returned attributes from: %s', @$attributes['identityProvider']));
+            $token = $this->authenticationManager->authenticate(
+                    new ShibbolethUserToken($this->providerKey, $username, $attributes));
 
             if (null !== $this->logger) {
                 $this->logger->debug(sprintf('ShibbolethListener: received token: %s', $token));
@@ -120,21 +117,14 @@ class ShibbolethListener implements ListenerInterface
             } else if ($token instanceof Response) {
                 $event->setResponse($token);
             }
-
         } catch (AuthenticationException $e) {
-            $this->securityContext->setToken(null);
-
             if (null !== $this->logger) {
                 $this->logger->info(sprintf('Shibboleth authentication request failed for user "%s": %s', $username, $e->getMessage()));
             }
 
-            if ($this->authenticationEntryPoint) {
-                return $event->setResponse($this->authenticationEntryPoint->start($request, $e));
-            }
-        } catch (\Exception $e) {
-            if (null !== $this->logger) {
-                $this->logger->info(sprintf('Shibboleth authnetication failed because of unkown error: %s', $e->getMessage()));
-            }
+            $response = new Response();
+            $response->setStatusCode(Response::HTTP_FORBIDDEN);
+            $event->setResponse($response);
         }
     }
 }

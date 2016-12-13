@@ -29,19 +29,26 @@ use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
 class ShibbolethUserToken extends AbstractToken
 {
+    private $providerKey;
+
     /**
      * @param mixed $user
      * @param array $attributes
      * @param array $roles
      * @throws \InvalidArgumentException
      */
-    public function __construct($user = null, $attributes = array(), $roles = array())
+    public function __construct($providerKey, $user = null, $attributes = array(), $roles = array())
     {
+        if (empty($providerKey)) {
+            throw new \InvalidArgumentException('$providerKey must not be empty.');
+        }
+
         if ((empty($roles) && $user instanceof UserInterface)) {
             $roles = $user->getRoles();
         }
 
         parent::__construct($roles);
+        $this->providerKey = $providerKey;
         $this->setUser($user);
         $this->setAttributes($attributes);
     }
@@ -49,6 +56,11 @@ class ShibbolethUserToken extends AbstractToken
     public function getCredentials()
     {
         return '';
+    }
+
+    public function getProviderKey()
+    {
+        return $this->providerKey;
     }
 
     /**
