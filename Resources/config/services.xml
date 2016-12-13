@@ -40,7 +40,6 @@
             <argument type="service" id="security.authentication.manager" />
             <argument type="service" id="shibboleth" />
             <argument /> <!-- Provider-shared Key -->
-            <argument type="service" id="security.authentication.entry_point" on-invalid="null" />
             <argument type="service" id="logger" on-invalid="null" />
             <argument type="service" id="event_dispatcher" on-invalid="null"/>
         </service>
