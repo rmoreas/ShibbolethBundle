@@ -19,6 +19,6 @@
         "psr-4": { "KULeuven\\ShibbolethBundle\\": "" }
     },
     "require": {
-        "symfony/symfony": "^3.2"
+        "symfony/symfony": "^3.1"
     }
 }
