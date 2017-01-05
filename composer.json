@@ -1,5 +1,5 @@
 {
-    "name": "kuleuven/shibboleth-bundle",
+    "name": "famoser/shibboleth-bundle",
     "description": "Symfony2 authentication provider for Shibboleth",
     "keywords": ["authentication","security","shibboleth"],
     "type": "symfony-bundle",
@@ -10,6 +10,9 @@
         },
         {
             "name": "Bert Van Gelder"
+        },
+        {
+            "name": "Florian Moser"
         }
     ],
     "autoload": {
