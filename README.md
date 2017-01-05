@@ -1,3 +1,5 @@
+Note from famoser: The is a fork with very few changes; the shibboleth token is now saved into the TokenStorage which is new in symfony3. In simple tests the Bundle works correctly. I can not guarantee for the correction and security of the code!
+
 ShibbolethBundle
 ================
 
@@ -6,7 +8,7 @@ This bundle adds a shibboleth authentication provider for your Symfony2 project.
 Requirements
 ------------
 * [PHP](http://php.net) 5.3.3 and up.
-* [Symfony 2.2+][http://symfony.com]
+* [Symfony 3.0+][http://symfony.com]
 
 Installation
 ------------
