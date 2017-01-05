@@ -25,6 +25,7 @@
 namespace KULeuven\ShibbolethBundle\Security;
 
 use KULeuven\ShibbolethBundle\Service\Shibboleth;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
@@ -40,6 +41,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ShibbolethListener implements ListenerInterface
 {
+    /* @var TokenStorageInterface $securityContext */
     private $securityContext;
     private $authenticationManager;
     private $providerKey;
@@ -50,7 +52,7 @@ class ShibbolethListener implements ListenerInterface
     private $shibboleth;
 
     public function __construct(
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $securityContext,
         AuthenticationManagerInterface $authenticationManager,
         Shibboleth $shibboleth,
         $providerKey = null,

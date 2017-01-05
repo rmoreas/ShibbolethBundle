@@ -14,5 +14,8 @@
     ],
     "autoload": {
         "psr-4": { "KULeuven\\ShibbolethBundle\\": "" }
+    },
+    "require": {
+        "symfony/symfony": "^3.2"
     }
-}	
+}
