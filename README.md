@@ -1,9 +1,17 @@
-Note from famoser: The is a fork with very few changes; the shibboleth token is now saved into the TokenStorage which is new in symfony3. In simple tests the Bundle works correctly. I can not guarantee for the correction and security of the code!
+Important note from famoser:
+==================
+What is Shibboleth?
+------------------
+Sibboleth is a tool installed on the server, depending on the setup you can activate it with the .htaccess configuration as provided below or you may need to ask your server administration.
+It allows for your user to login at the provided used by your server, and adds additional header containing the authentication information on __each__ request. You can test if all works nicely by simply dumping the headers: `dump($request->headers)`.
+The Shibboleth bundle aims to integrate this authentication fully into symfony; it adds firewalls and user managers to archive this. this fork simply makes the project compatible with symfony 3, and does not change existing behaviour. Very few changes were made, for example the shibboleth token is now saved into the TokenStorage (as the previously used way of storing this token has been removed). The core functionality of the bundle has not been modified at all. 
+If an additional firewall is overkill for you, you might want to skip the installation of this Bundle, and rather set up listeners on kernel events which handle the authentification. 
+As the implementations of Shibboleth differ (for example the header keys) you may need to change core functionality of this bundle to set it up properly
 
 ShibbolethBundle
 ================
 
-This bundle adds a shibboleth authentication provider for your Symfony2 project.
+This bundle adds a shibboleth authentication provider for your Symfony3 project.
 
 Requirements
 ------------
