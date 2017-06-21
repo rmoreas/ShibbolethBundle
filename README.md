@@ -1,12 +1,17 @@
+What is Shibboleth again?
+==================
+Sibboleth is a tool installed on the server, depending on the setup you can activate it with the .htaccess configuration as provided below or you may need to ask your server administration. If activated correctly it allows for your user to login at the provider used by your server, and afterwards adds additional header containing the authentication information on __each__ request, to be used by your application. You can test if all works nicely by simply dumping the headers: `dump($request->headers)`.  
+The Shibboleth bundle aims to integrate this authentication fully into symfony; it adds firewalls and user managers to archive this. This fork simply makes the project compatible with symfony 3, and tries not to change existing behaviour. If an additional firewall is overkill for you, you might want to skip the installation of this Bundle, and rather set up listeners on kernel events which handle the authentification.  
+
 ShibbolethBundle
 ================
 
-This bundle adds a shibboleth authentication provider for your Symfony2 project.
+This bundle adds a shibboleth authentication provider for your Symfony3 project.
 
 Requirements
 ------------
 * [PHP](http://php.net) 5.3.3 and up.
-* [Symfony 2.2+][http://symfony.com]
+* [Symfony 3.0+][http://symfony.com]
 
 Installation
 ------------

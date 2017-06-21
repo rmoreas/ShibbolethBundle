@@ -25,9 +25,9 @@
 namespace KULeuven\ShibbolethBundle\Security;
 
 use KULeuven\ShibbolethBundle\Service\Shibboleth;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
-use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
@@ -40,6 +40,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ShibbolethListener implements ListenerInterface
 {
+    /* @var TokenStorageInterface $securityContext */
     private $securityContext;
     private $authenticationManager;
     private $providerKey;
@@ -50,7 +51,7 @@ class ShibbolethListener implements ListenerInterface
     private $shibboleth;
 
     public function __construct(
-        SecurityContextInterface $securityContext,
+        TokenStorageInterface $securityContext,
         AuthenticationManagerInterface $authenticationManager,
         Shibboleth $shibboleth,
         $providerKey = null,
@@ -74,6 +75,7 @@ class ShibbolethListener implements ListenerInterface
 
     public function handle(GetResponseEvent $event)
     {
+        /** @var Request $request */
         $request = $event->getRequest();
 
         if (!$this->shibboleth->isAuthenticated($request)) {
@@ -85,6 +87,7 @@ class ShibbolethListener implements ListenerInterface
         }
 
         $username = $this->shibboleth->getUser($request);
+        $username = substr($username, 0, strpos($username, '@'));
 
         if (null !== $this->logger) {
             $this->logger->debug(sprintf('Shibboleth service returned user: %s', $username));

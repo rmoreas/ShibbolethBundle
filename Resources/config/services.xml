@@ -36,7 +36,7 @@
         <service id="security.authentication.listener.shibboleth"
             class="KULeuven\ShibbolethBundle\Security\ShibbolethListener" public="false">
             <tag name="monolog.logger" channel="security" />
-            <argument type="service" id="security.context"/>
+            <argument type="service" id="security.token_storage"/>
             <argument type="service" id="security.authentication.manager" />
             <argument type="service" id="shibboleth" />
             <argument /> <!-- Provider-shared Key -->
