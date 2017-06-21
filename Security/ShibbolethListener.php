@@ -87,6 +87,7 @@ class ShibbolethListener implements ListenerInterface
         }
 
         $username = $this->shibboleth->getUser($request);
+        $username = substr($username, 0, strpos($username, '@'));
 
         if (null !== $this->logger) {
             $this->logger->debug(sprintf('Shibboleth service returned user: %s', $username));
